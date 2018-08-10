@@ -1,0 +1,139 @@
+<%- include('../partials/header', {title: 'Explore', styles: ["/css/main.css"]}) %>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+   integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+   crossorigin=""/>
+    <section class="main">
+    <header class="show-header">
+        <div class="ui container">
+            <h1 class="ui header">
+                View
+                <%= restaurant.title %>
+            </h1>
+        </div>
+    </header>
+
+    <div class="ui stackable container grid">
+        <div class="row">
+            <div class="four wide column">
+                <div class="ui vertical pointing inverted menu side-menu">
+                    <a class="item active">
+                        Information
+                    </a>
+                    <a class="item">
+                        More pictures
+                    </a>
+                    <a class="item">
+                        Misc
+                    </a>
+                    <a class="item">
+                        Links
+                    </a>
+                </div>
+
+                <div class="ui container">
+                    <div style="height: 400px; width: 100%;" id="mapid"></div>
+                </div>
+            </div>
+            <div class="twelve wide column">
+                <div class="ui raised segments">
+                    <div class="ui segment image-segment">
+                        <img class="ui image rounded fluid" src="<%= restaurant.image %>">
+                    </div>
+
+                    <div class="ui blue segment">
+                        <div class="ui grid">
+                            <div class="left floated left aligned six wide column">
+                                <h2>
+                                    <%= restaurant.title %>
+                                </h2>
+                            </div>
+                            <div class="right floated right aligned six wide column">
+                                <h3>$<%= restaurant.price %></h3>
+                            </div>
+                            <div class="sixteen wide column">
+                                <p>
+                                    <%= restaurant.description %>
+                                </p>
+                            </div>
+
+                            <div class="sixteen wide column">
+                                <span>
+                                    <i class="user icon"></i>
+                                    <em>Submited by </em><%= restaurant.author.name + ' - ' + moment(restaurant.createdAt).fromNow() %>
+                                </span>
+                            </div>
+                            
+                            <% if(user && restaurant.author.id.equals(user._id)) { %>
+                                <div class="sixteen wide column">
+                                    <a class="ui button orange basic left floated" href="/restaurants/<%= restaurant._id %>/edit">Edit restaurant
+                                    </a>
+                                    <form action="/restaurants/<%= restaurant._id %>?_method=DELETE" method="POST">
+                                        <button class="ui button red basic left floated">Delete restaurant</button>
+                                    </form>
+                                </div>
+                            <% } %>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui piled segments">
+                    <div class="ui secondary segment clearing">
+                        <a class="ui button basic green right floated" href="/restaurants/<%= restaurant._id %>/comments/new">Leave a Comment
+                        </a>
+                    </div>
+                    <div class="ui secondary segment">
+                        <div class="ui segments">
+                            <% restaurant.comments.forEach(e => { %>
+                                <div class="ui segment">
+                                    <div class="ui grid">
+                                        <div class="left floated left aligned six wide column">
+                                            <strong>
+                                                <%= e.author.name %>
+                                            </strong>
+                                        </div>
+                                        <div class="right floated right aligned six wide column">
+                                            <p> <%= moment(e.createdAt).fromNow() %> </p>
+                                        </div>
+                                        <div class="sixteen wide column">
+                                            <p>
+                                                <%= e.content %>
+                                            </p>
+                                        </div>
+
+                                        <% if(user && e.author.id.equals(user._id)) { %>
+                                            <div class="sixteen wide column">
+                                                <div class="ui basic buttons">
+                                                    <a href="/restaurants/<%= restaurant._id%>/comments/<%= e._id %>/edit" class="compact ui button">Edit</a>
+                                                    <form action="/restaurants/<%= restaurant._id %>/comments/<%= e._id %>?_method=DELETE" method="POST">
+                                                        <button class="compact ui button">Delete</button>
+                                                    </form>
+                                                  </div>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+   integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+   crossorigin=""></script>
+
+   <script>
+       var mymap = L.map('mapid').setView([<%= restaurant.lat %>, <%= restaurant.lng %>], 14);
+       var marker = L.marker([<%= restaurant.lat %>, <%= restaurant.lng %>]).addTo(mymap);
+       marker.bindPopup("<b><%= restaurant.title %></b><br><%= restaurant.location %>").openPopup();
+       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidmljdG9ybGFuZGltIiwiYSI6ImNqa255ZjloaDE3Zm8za3BwZThza2lzNTEifQ.ASxw5tR4QBFOXvqXb96wjg', {
+		maxZoom: 18,
+		attribution: '',
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1IjoidmljdG9ybGFuZGltIiwiYSI6ImNqa255ZjloaDE3Zm8za3BwZThza2lzNTEifQ.ASxw5tR4QBFOXvqXb96wjg'
+	}).addTo(mymap);
+   </script>
+<%- include('../partials/footer') %>

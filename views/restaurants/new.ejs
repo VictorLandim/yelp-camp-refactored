@@ -1,0 +1,48 @@
+<%- include('../partials/header', {title: 'Submit new restaurant', styles: ["/css/main.css"]}) -%>
+<section class="main">
+    <div class="ui container">
+        <a href="/restaurants" class="go-back">
+            <i class="hand point left icon"></i>
+            Go back
+        </a>
+    </div>
+    <div class="form-container">
+        <div class="ui stackable centered grid">
+            <div class="six wide column">
+                <h2 class="ui header">
+                    <div class="content">
+                        Submit new restaurant
+                    </div>
+                </h2>
+                <div class="ui raised very padded inverted segment">
+                    <form class="ui large form" action="/restaurants" method="POST">
+                        <div class="ui raised segment">
+                            <div class="field">
+                                <label>Title</label>
+                                <input type="text" name="title" placeholder="Title" required>
+                            </div>
+                            <div class="field">
+                                <label>Image</label>
+                                <input type="text" name="image" placeholder="Image" required>
+                            </div>
+                            <div class="field">
+                                <label>Description</label>
+                                <input type="text" name="description" placeholder="Description" required>
+                            </div>
+                            <div class="field">
+                                <label>Average price</label>
+                                <input type="number" name="price" placeholder="Price" required step="0.01">
+                            </div>
+                            <div class="field">
+                                <label>Location</label>
+                                <input type="text" name="location" placeholder="Location" required>
+                            </div>
+                            <button class="ui fluid large blue submit button">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<%- include('../partials/footer') -%>

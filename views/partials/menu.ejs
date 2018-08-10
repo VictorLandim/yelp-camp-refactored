@@ -1,0 +1,23 @@
+<style>
+    .menu-button {
+        margin-left: 0.5em !important;
+    }
+</style>
+
+<div class="ui inverted vertical masthead center aligned segment">
+    <div class="ui container">
+        <div class="ui large secondary inverted pointing menu">
+            <a class="active item" href="/restaurants">Home</a>
+
+            <div class="right item">
+                <% if (!user) { %>
+                    <a href="/login" class="ui inverted button menu-button">Log in</a>
+                    <a href="/register" class="ui inverted button menu-button">Sign Up</a>
+                <% } else {  %>
+                    <a class="ui inverted button menu-button">Logged in as <%= user.username %></a>
+                    <a href="/logout" class="ui inverted button menu-button">Log out</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

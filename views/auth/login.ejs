@@ -1,0 +1,34 @@
+<%- include('../partials/header', {title: 'Login', styles: ["/css/main.css"]}) -%>
+<section class="main">
+    <div class="ui container">
+        <a href="/restaurants" class="go-back">
+            <i class="hand point left icon"></i>
+            Go back
+        </a>
+    </div>
+    <div class="form-container">
+        <div class="ui stackable centered grid">
+            <div class="five wide column">
+                <h2 class="ui header">
+                    <div class="content">
+                        Log in
+                    </div>
+                </h2>
+                <div class="ui raised very padded inverted segment">
+                    <form class="ui large inverted form" action="/login" method="POST">
+                        <div class="field">
+                            <label>Username</label>
+                            <input type="text" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            <input type="password" name="password" placeholder="Password" required>
+                        </div>
+                        <button class="ui fluid large blue submit button">Log in</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<%- include('../partials/footer') -%>

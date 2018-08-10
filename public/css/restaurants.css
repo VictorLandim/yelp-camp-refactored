@@ -1,0 +1,25 @@
+.card .image {
+    height: 60%;
+}
+
+.card .image img {
+    height: 100% !important;
+}
+
+.cards {
+    justify-content: center;
+}
+
+header {
+    background-color: #1b1c1d;
+    text-align: left;
+    padding: 50px 0;
+}
+
+header h1 {
+    margin-bottom: 50px !important;
+}
+
+.main-container {
+    padding: 25px 0;
+}

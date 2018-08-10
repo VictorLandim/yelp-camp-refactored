@@ -1,0 +1,45 @@
+<%- include('../partials/header', {title: 'Explore', styles: ["/css/restaurants.css"]}) %>
+<section class="main">
+    <header>
+        <div class="ui container">
+            <h1 class="ui inverted header">
+                Explore all restaurants
+            </h1>
+            <a class="ui huge primary button" href="/restaurants/new">Submit new
+            </a>
+        </div>
+    </header>
+
+    <div class="ui container main-container">
+        <div class="ui link cards">
+            <% restaurants.forEach(e => { %>
+                <div class="card">
+                    <a class="image" href="/restaurants/<%= e._id %>">
+                        <img src="<%= e.image %>">
+                    </a>
+                    <div class="content">
+                        <div class="header">
+                            <%= e.title %>
+                        </div>
+                        <div class="meta">
+                            <a>Submited <%= moment(e.createdAt).fromNow() %></a>
+                        </div>
+                        <div class="description">
+                            <%= e.description.slice(0, 70) %> ...
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <span class="right floated">
+                        </span>
+                        <span>
+                            <i class="user icon"></i>
+                            <%= e.author.username %>
+                        </span>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,50 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>YelpCamp</title>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-      <link rel="stylesheet" href="/stylesheets/main.css">
-  </head>
-  <body>
-  <nav class="navbar navbar-default">
-      <div class="container">
-          <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
 
-              <a class="navbar-brand" href="/">YelpCamp</a>
-          </div>
-          <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-              <li class="<%= typeof page !== 'undefined' && page === 'campgrounds' ? 'active' : '' %>"><a href="/campgrounds">Home</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <% if(!currentUser){ %>
-                    <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>"><a href="/login">Login</a></li>
-                    <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>"><a href="/register">Sign Up</a></li>
-                <% } else { %>
-                    <li><a href="#">Signed In As <%= currentUser.username %></a></li>
-                    <li><a href="/logout">Logout</a></li>
-                <% } %>
-            </ul>
-          </div>
-      </div>
-  </nav>
-  
-  <div class="container">
-     <% if(error && error.length > 0) { %>
-       <div class="alert alert-danger"><p><%=error %></p></div>
-     <% } %>
-     
-     <% if(success && success.length > 0) { %>
-       <div class="alert alert-success"><p><%= success %></p></div>
-     <% } %>
-  </div>
-  <div class="container">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.3/dist/semantic.min.css">
+    <% if (styles) { -%>
+        <% styles.forEach(e => { -%>
+            <link rel="stylesheet" href="<%= e %>">
+        <% }); -%>
+    <% } -%>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAOMSURBVGhD5ZpLqE9dGIePOyMpCUlSBgoDd0IZKFGKXIoSH5KSu5hQLmGgSGLmUgwklMtAIjFQ9OUyQKKIhDIhuV+eX51dq9V71l7Lf/3XxFPP5O2sd73v2fvstdfapyWChXgYz2MvBWAJPmv1pAKtHMJjuB27KhBgOh7ADThcgWZzH3+32l8B2IxV7KYCrTxA/2fbws0hb+M4bBr6rfvFxTQyWIEAfiPyO+oOaApvsJoopZG628VqRP7ASZidj1hNktLIBAUCtNWIfIIdMSvuBCmNTFMgQKgRuQCz0Q3d5CmNzFQgQF0jlzEb3dFNntLIfAUC1DXyCbPdXlo33OQpjSxSIEBdI3IEZkGFu4lTGlmhQICYRhZjFgaimzilkVUKBIhpZCtmYSi6iUei2ItV7J4C0A6fYxVXoSFiGjmIWRiGbuJXeAG1ArvxU3jWi23BEDGNuO9xDaFFzZogxt0YomgjY9GaIMadGGIHWuNcszXSD60JYlyOIXTFrHGu2Rppjy/QmqTOujVgH1rjXLW/ycYatCYJ6T6S2+IIWmNdN2E2OuBFtCayfIsDsI4zaI13nYhZ6Yy6zNZkrndRi2gMV9DKUakNndampqB9trvRqtRmSE8pNRyLtrZ+Hte6l86GGYTf0J10JabyGN0crrqVi/AQ3YnVXCqv0c1R+RR7YBHeoTu5Fs5UvqKbQ2oPove7InRCv4BZmEJP9HP8wjlYDD1a/SLqXtl9hqCfI9sqHstk9IvQiWEKM9DPMQqLouNSv4jUp8x69HPooKMoWi/8IvQUS0FnyX4O/d0U5QT6RXzBlFVYRz1+Dt2yRbmBfhGyD8ZiLYZ7sCjuvtw1ZS3RFfTHP8Ji6E3Yfz2pnIsx9EZrvOyLRQjtGDdiDKPRGi/nYRHGoFWA3I8xTEVrvIzN0TBT0CpA6pNbDHoNscbLYm+9s9EqQJ7DGKwFtfIOFuE/tAqQ1zCGtWiNl6kL618TKuJ/jCF0MKe9SBFWo1WAjG1kHVrjpQ7Bi6BPBVYBMuYISIRyFGtkKVoFyKsYwzK0xstbWAR9F7QKkKcxBu0mrfGy2OM3tCrrCDQGfUO3xsujWAT/m6KrHgQxWFvlym1YjJdoFTEeY9C+5QNaObTgFsM6fH6PXTCWS+jn+Ikpe5qG0SGBJnWL2IUpWH/waq44+oijQ7rPeBzr/jfLQnt/XUl9j7yO2iL867S0/AG7zdLRhCM4JwAAAABJRU5ErkJggg==">
+    <style>
+        .menu-button {
+            margin-left: 0.5em !important;
+        }
+
+        #flash-message {
+            padding: 30px 0;
+            background-color: #1b1c1d;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            padding-bottom: 50px;
+        }
+
+        .main {
+            min-height: calc(95vh - 70px);
+            padding-bottom: 50px;
+        }
+
+        footer {
+            padding: 15px 0px;
+            font-size: 14px;
+            text-align: center;
+            background-color: #1b1c1d;
+            color: #fff;
+        }
+    </style>
+        
+    <title>
+        <%= title %>
+    </title>
+</head>
+
+<body>
+    <section id="menu">
+        <div class="ui inverted vertical masthead center aligned segment">
+            <div class="ui container">
+                <div class="ui large secondary inverted pointing menu">
+                    <div class="item">
+                        <a href="/">
+                            <i class="iu icon utensils"></i>
+                            Discovereats</a>
+                    </div>
+                    <a class="<%= path === '/restaurants' ? 'active' : '' %> item" href="/restaurants">Home</a>
+                    <div class="right item">
+                        <% if (!user) { -%>
+                            <a href="/login" class="ui inverted button menu-button">Log in</a>
+                            <a href="/register" class="ui inverted button menu-button">Sign Up</a>
+                        <% } else {  -%>
+                            <a class="ui inverted button menu-button">Logged in as <%= user.username %></a>
+                            <a href="/logout" class="ui inverted button menu-button">Log out</a>
+                        <% } -%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <% if (message.success.length > 0) { -%>
+        <section id="flash-message">
+            <div class="ui container">
+                <div class="ui success message">
+                    <div class="header">
+                        <%= message.success -%>
+                    </div>
+                    <p>
+                    </p>
+                </div>
+            </div>            
+        </section>
+    <% } -%>
+
+    <% if (message.error.length > 0) { -%>
+        <section id="flash-message">
+            <div class="ui container">
+                <div class="ui error message">
+                    <div class="header">
+                        <%= message.error -%>
+                    </div>
+                    <p>
+                    </p>
+                </div>
+            </div>            
+        </section>
+    <% } -%>
+
+    <% if (message.info.length > 0) { -%>
+        <section id="flash-message">
+            <div class="ui container">
+                <div class="ui info message">
+                    <div class="header">
+                        <%= message.info -%>
+                    </div>
+                    <p>
+                    </p>
+                </div>
+            </div>            
+        </section>
+    <% } -%>

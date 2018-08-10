@@ -1,17 +1,33 @@
-<% include ../partials/header %>
-    <div class="row">
-        <h1 style="text-align: center">Add New Comment to <%= campground.name %></h1>
-        <div style="width: 30%; margin: 25px auto;">
-            <form action="/campgrounds/<%= campground._id %>/comments" method="POST">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="comment[text]" placeholder="text">
+<%- include('../partials/header', {title: 'Add new comment', styles: ["/css/main.css"]}) -%>
+<section class="main">
+    <div class="ui container">
+        <a href="/restaurants/<%= restaurant._id %>" class="go-back">
+            <i class="hand point left icon"></i>
+            Go back
+        </a>
+    </div>
+    <div class="form-container">
+        <div class="ui stackable centered grid">
+            <div class="six wide column">
+                <h2 class="ui header">
+                    <div class="content">
+                        Add new comment to
+                        <%= restaurant.title %>
+                    </div>
+                </h2>
+                <div class="ui raised very padded inverted segment">
+                    <form class="ui large form" action="/restaurants/<%= restaurant._id %>/comments" method="POST">
+                        <div class="ui raised segment">
+                            <div class="field">
+                                <label>Content</label>
+                                <input type="text" name="comment[content]" placeholder="Content">
+                            </div>
+                            <button class="ui fluid large blue submit button">Submit</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
-                </div>
-            </form>
-            <a href="/campgrounds">Go Back</a>
+            </div>
         </div>
     </div>
-<% include ../partials/footer %>
-
+</section>
+<%- include('../partials/footer') -%>
