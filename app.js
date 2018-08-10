@@ -1,69 +1,77 @@
-var express     = require("express"),
-    app         = express(),
-    bodyParser  = require("body-parser"),
-    mongoose    = require("mongoose"),
-    passport    = require("passport"),
-    cookieParser = require("cookie-parser"),
-    LocalStrategy = require("passport-local"),
-    flash        = require("connect-flash"),
-    Campground  = require("./models/campground"),
-    Comment     = require("./models/comment"),
-    User        = require("./models/user"),
-    session = require("express-session"),
-    seedDB      = require("./seeds"),
-    methodOverride = require("method-override");
-// configure dotenv
-require('dotenv').load();
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
+const createError = require('http-errors');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const flash = require('connect-flash');
+const methodOverride = require('method-override');
+const expressSession = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const { indexRoutes, restaurantRoutes, commentRoutes, authRoutes, seedRoutes } = require('./routes');
+const User = require('./models/user');
+const { errorMiddleware } = require('./middleware');
+const { mongoUrl } = require('./config');
 
-//requiring routes
-var commentRoutes    = require("./routes/comments"),
-    campgroundRoutes = require("./routes/campgrounds"),
-    indexRoutes      = require("./routes/index")
-    
-// assign mongoose promise library and connect to database
+mongoose.connect(
+    mongoUrl,
+    { useNewUrlParser: true }
+);
 mongoose.Promise = global.Promise;
 
-const databaseUri = process.env.MONGODB_URI || 'mongodb://localhost/yelp_camp';
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-mongoose.connect(databaseUri, { useMongoClient: true })
-      .then(() => console.log(`Database connected`))
-      .catch(err => console.log(`Database connection error: ${err.message}`));
+app.use(
+    expressSession({
+        secret: 'Extremely secret key',
+        resave: false,
+        saveUninitialized: false
+    })
+);
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.set("view engine", "ejs");
-app.use(express.static(__dirname + "/public"));
-app.use(methodOverride('_method'));
-app.use(cookieParser('secret'));
-//require moment
-app.locals.moment = require('moment');
-// seedDB(); //seed the database
-
-// PASSPORT CONFIGURATION
-app.use(require("express-session")({
-    secret: "Once again Rusty wins cutest dog!",
-    resave: false,
-    saveUninitialized: false
-}));
-
-app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use(function(req, res, next){
-   res.locals.currentUser = req.user;
-   res.locals.success = req.flash('success');
-   res.locals.error = req.flash('error');
-   next();
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.disable('x-powered-by');
+
+app.use(methodOverride('_method'));
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    res.locals.message = {
+        success: req.flash('success'),
+        error: req.flash('error'),
+        info: req.flash('info')
+    };
+    res.locals.moment = require('moment');
+    res.locals.path = req.path;
+    next();
 });
 
+app.use('/', indexRoutes);
+app.use('/', authRoutes);
+app.use('/restaurants', restaurantRoutes);
+app.use('/restaurants/:id/comments', commentRoutes);
+app.use('/seed', seedRoutes);
 
-app.use("/", indexRoutes);
-app.use("/campgrounds", campgroundRoutes);
-app.use("/campgrounds/:id/comments", commentRoutes);
+// catch 404 and forward to error handler
+app.use((req, res, next) => next(createError(404)));
 
-app.listen(process.env.PORT, process.env.IP, function(){
-   console.log("The YelpCamp Server Has Started!");
-});
+// error handler
+// app.use(errorMiddleware);
+
+module.exports = app;

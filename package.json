@@ -1,33 +1,33 @@
 {
-  "name": "v1",
-  "version": "1.0.0",
-  "engines": {
-    "node": "6.11.1"
-  },
-  "description": "YelpCamp v1",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Colt Steele",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "connect-flash": "^0.1.1",
-    "cookie-parser": "^1.4.3",
-    "dotenv": "^4.0.0",
-    "ejs": "^2.6.1",
-    "express": "^4.16.3",
-    "express-session": "^1.15.6",
-    "geocoder": "^0.2.3",
-    "locus": "^2.0.1",
-    "method-override": "^2.3.10",
-    "moment": "^2.22.2",
-    "mongoose": "^4.13.14",
-    "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^3.1.0",
-    "request": "^2.87.0"
-  }
+    "name": "express-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "dev": "nodemon ./bin/www",
+        "start": "node ./bin/www"
+    },
+    "author": "Victor Landim",
+    "license": "ISC",
+    "dependencies": {
+        "connect-flash": "^0.1.1",
+        "cookie-parser": "^1.4.3",
+        "dotenv": "^6.0.0",
+        "ejs": "^2.6.1",
+        "express": "^4.16.3",
+        "express-session": "^1.15.6",
+        "faker": "^4.1.0",
+        "http-errors": "^1.6.3",
+        "method-override": "^3.0.0",
+        "moment": "^2.22.2",
+        "mongoose": "^5.2.5",
+        "morgan": "^1.9.0",
+        "node-geocoder": "^3.22.0",
+        "passport": "^0.4.0",
+        "passport-local": "^1.0.0",
+        "passport-local-mongoose": "^5.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^1.18.3"
+    }
 }

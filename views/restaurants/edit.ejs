@@ -1,0 +1,48 @@
+<%- include('../partials/header', {title: 'Submit new restaurant', styles: ["/css/main.css"]}) -%>
+<section class="main">
+    <div class="ui container">
+        <a href="/restaurants/<%= restaurant._id %>" class="go-back">
+            <i class="hand point left icon"></i>
+            Go back
+        </a>
+    </div>
+    <div class="form-container">
+        <div class="ui stackable centered grid">
+            <div class="six wide column">
+                <h2 class="ui header">
+                    <div class="content">
+                        Submit new restaurant
+                    </div>
+                </h2>
+                <div class="ui raised very padded inverted segment">
+                    <form class="ui large form" action="/restaurants/<%= restaurant._id %>?_method=PUT" method="POST">
+                        <div class="ui raised segment">
+                            <div class="field">
+                                <label>Title</label>
+                                <input type="text" name="restaurant[title]" placeholder="Title" value="<%= restaurant.title %>" required>
+                            </div>
+                            <div class="field">
+                                <label>Image</label>
+                                <input type="text" name="restaurant[image]" placeholder="Image" value="<%= restaurant.image %>" required>
+                            </div>
+                            <div class="field">
+                                <label>Description</label>
+                                <input type="text" name="restaurant[description]" placeholder="Description" value="<%= restaurant.description %>" required>
+                            </div>
+                            <div class="field">
+                                <label>Average price</label>
+                                <input type="number" name="restaurant[price]" placeholder="Price" value="<%= restaurant.price %>" step="0.01" required>
+                            </div>
+                            <div class="field">
+                                <label>Location</label>
+                                <input type="text" name="restaurant[location]" placeholder="Location" value="<%= restaurant.location%>" required>
+                            </div>
+                            <button class="ui fluid large blue submit button">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<%- include('../partials/footer') -%>
